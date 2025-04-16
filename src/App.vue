@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from 'vue'
-let ConfettiGenerator: any
+let ConfettiGenerator: unknown
 
 const pokemon = ref<{ name: string; image: string } | null>(null)
 const guess = ref('')
@@ -10,7 +10,7 @@ const isCorrect = ref(false)
 const loading = ref(true)
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const confettiRef = ref<HTMLCanvasElement | null>(null)
-let confettiInstance: any = null
+let confettiInstance: unknown = null
 
 async function fetchRandomPokemon() {
   loading.value = true
@@ -95,7 +95,19 @@ watch(showModal, (val) => {
 
 <template>
   <div class="container">
-    <canvas ref="confettiRef" v-show="isCorrect && guessed" style="position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:99999;pointer-events:none;"></canvas>
+    <canvas
+      ref="confettiRef"
+      v-show="isCorrect && guessed"
+      style="
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 99999;
+        pointer-events: none;
+      "
+    ></canvas>
     <div
       class="pokemon-container"
       style="
