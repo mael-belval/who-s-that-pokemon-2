@@ -10,11 +10,11 @@
           class="guess-value"
           v-model="guessValue"
           type="text"
-          @keyup.enter="$emit('submit', guessValue)"
-          placeholder="Enter Pokémon name"
+          @keyup.enter="handleSubmit"
+          placeholder="Entre le nom du Pokemon"
           autofocus
         />
-        <button class="guess-submit" @click="$emit('submit', guessValue)">Envoyer</button>
+        <button class="guess-submit" @click="handleSubmit">Envoyer</button>
       </div>
       <div v-else>
         <button class="guess-submit" @click="$emit('play-again')">Rejouer</button>
@@ -47,8 +47,17 @@ watch(
         document.body.classList.remove('modal-open')
       }
     }
+    // Clear input when modal opens
+    if (val) {
+      guessValue.value = ''
+    }
   },
 )
+
+function handleSubmit() {
+  emit('submit', guessValue.value)
+  guessValue.value = ''
+}
 
 onMounted(() => {
   emit('dialog-mounted', dialogRef.value)
