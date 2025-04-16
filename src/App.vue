@@ -12,6 +12,15 @@ const isCorrect = ref(false)
 const loading = ref(true)
 const dialogRef = ref<HTMLDialogElement | null>(null)
 
+function speak(text: string) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel()
+    const utter = new window.SpeechSynthesisUtterance(text)
+    utter.lang = 'en-US'
+    window.speechSynthesis.speak(utter)
+  }
+}
+
 async function fetchRandomPokemon() {
   loading.value = true
   guessed.value = false
@@ -27,6 +36,7 @@ async function fetchRandomPokemon() {
   loading.value = false
   setTimeout(() => {
     showModal.value = true
+    speak("who's that pokemon")
   }, 3000)
 }
 
@@ -34,6 +44,11 @@ function handleGuess(submittedGuess: string) {
   guessed.value = true
   guess.value = submittedGuess
   isCorrect.value = submittedGuess.trim().toLowerCase() === pokemon.value?.name.toLowerCase()
+  setTimeout(() => {
+    if (pokemon.value) {
+      speak('It was ' + pokemon.value.name.charAt(0).toUpperCase() + pokemon.value.name.slice(1))
+    }
+  }, 500)
 }
 
 function playAgain() {
