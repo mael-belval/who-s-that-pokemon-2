@@ -101,12 +101,12 @@ watch(showModal, (val) => {
     <div v-if="loading" style="color: white; text-align: center; margin-top: 2rem">Loading...</div>
     <dialog ref="dialogRef" id="modal-1">
       <div class="modal-body">
-        <h1 v-if="!guessed">Name that Pokemon!</h1>
+        <h1 v-if="!guessed">Who's that Pokemon?</h1>
         <h1 v-else>
           {{
             isCorrect
-              ? 'Correct!'
-              : `No, it was ${pokemon?.name.charAt(0).toUpperCase() + pokemon?.name.slice(1)}`
+              ? 'Bonne réponse!'
+              : `Non, c'était ${pokemon?.name.charAt(0).toUpperCase() + pokemon?.name.slice(1)}`
           }}
         </h1>
         <div class="guess-form" v-if="!guessed">
@@ -118,10 +118,10 @@ watch(showModal, (val) => {
             placeholder="Enter Pokémon name"
             autofocus
           />
-          <button class="guess-submit" @click="submitGuess">Submit</button>
+          <button class="guess-submit" @click="submitGuess">Envoyer</button>
         </div>
         <div v-else>
-          <button class="guess-submit" @click="playAgain">Play Again</button>
+          <button class="guess-submit" @click="playAgain">Rejouer</button>
         </div>
       </div>
     </dialog>
