@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
+let ConfettiGenerator: any
 
 const pokemon = ref<{ name: string; image: string } | null>(null)
 const guess = ref('')
@@ -8,6 +9,8 @@ const guessed = ref(false)
 const isCorrect = ref(false)
 const loading = ref(true)
 const dialogRef = ref<HTMLDialogElement | null>(null)
+const confettiRef = ref<HTMLCanvasElement | null>(null)
+let confettiInstance: any = null
 
 async function fetchRandomPokemon() {
   loading.value = true
@@ -15,6 +18,7 @@ async function fetchRandomPokemon() {
   isCorrect.value = false
   showModal.value = false
   guess.value = ''
+  stopConfetti()
   const id = Math.floor(Math.random() * 898) + 1
   const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
   const data = await res.json()
@@ -29,10 +33,47 @@ async function fetchRandomPokemon() {
 function submitGuess() {
   guessed.value = true
   isCorrect.value = guess.value.trim().toLowerCase() === pokemon.value?.name.toLowerCase()
+  if (isCorrect.value) {
+    showConfetti()
+  }
 }
 
 function playAgain() {
   fetchRandomPokemon()
+}
+
+function showConfetti() {
+  nextTick(async () => {
+    if (!ConfettiGenerator) {
+      ConfettiGenerator = (await import('confetti-js')).default
+    }
+    if (confettiInstance) {
+      confettiInstance.clear()
+      confettiInstance = null
+    }
+    if (confettiRef.value) {
+      confettiInstance = new ConfettiGenerator({
+        target: confettiRef.value,
+        max: 120,
+        size: 1.2,
+        animate: true,
+        props: ['circle', 'square', 'triangle', 'line'],
+        clock: 25,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        start_from_edge: true,
+        respawn: false,
+      })
+      confettiInstance.render()
+    }
+  })
+}
+
+function stopConfetti() {
+  if (confettiInstance) {
+    confettiInstance.clear()
+    confettiInstance = null
+  }
 }
 
 onMounted(() => {
@@ -54,6 +95,7 @@ watch(showModal, (val) => {
 
 <template>
   <div class="container">
+    <canvas ref="confettiRef" v-show="isCorrect && guessed" style="position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:99999;pointer-events:none;"></canvas>
     <div
       class="pokemon-container"
       style="
