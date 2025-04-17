@@ -22,13 +22,16 @@ let ConfettiGenerator: unknown
 
 async function startConfetti() {
   if (!ConfettiGenerator) {
+    // @ts-expect-error confetti-js is not typed
     ConfettiGenerator = (await import('confetti-js')).default
   }
   if (confettiInstance) {
+    // @ts-expect-error confetti-js is not typed
     confettiInstance.clear()
     confettiInstance = null
   }
   if (confettiRef.value) {
+    // @ts-expect-error confetti-js is not typed
     confettiInstance = new ConfettiGenerator({
       target: confettiRef.value,
       max: 120,
@@ -41,12 +44,14 @@ async function startConfetti() {
       start_from_edge: true,
       respawn: false,
     })
+    // @ts-expect-error confetti-js is not typed
     confettiInstance.render()
   }
 }
 
 function stopConfetti() {
   if (confettiInstance) {
+    // @ts-expect-error confetti-js is not typed
     confettiInstance.clear()
     confettiInstance = null
   }
